@@ -1,100 +1,91 @@
-import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import React, { useEffect } from "react";
 import useGlobalReducer from "../hooks/useGlobalReducer.jsx";
+import { useParams } from "react-router-dom";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export const UpdateContact = () => {
-    const { id } = useParams();
-    const navigate = useNavigate();
-    const [currentContact, setCurrentContact] = useState({
-        name: "",
-        phone: "",
-        email: "",
-        address: "",
-    });
 
-    const { store, dispatch, updateContact, getContacts } = useGlobalReducer();
+    const {id} = useParams(); 
+    const [currentContact, setCurrentContact] = useState({name:"", phone:"", email:"", address:""});
+    const {store, dispatch, updateContact, getContacts} =useGlobalReducer()
+    const navigate = useNavigate();
 
     useEffect(() => {
-        getContacts(); // carga los contactos
+        getContacts();
     }, []);
 
     useEffect(() => {
-        const contact = store.contacts?.find((c) => c.id === parseInt(id));
-        if (contact) {
-            setCurrentContact(contact);
-        }
-    }, [store.contacts, id]);
+        let contact = store.contacts?.filter((contact, index) => {return contact.id == id})
+        console.log(contact);
+        if(contact.length > 0){
+            setCurrentContact(contact[0])
+        }        
+    }, [store.contacts]);
 
     const handleUpdateContact = (e) => {
         e.preventDefault();
-        updateContact(currentContact);
-        getContacts(); // vuelve a cargar contactos actualizados
-        navigate("/");
-    };
+        updateContact(currentContact)
+        getContacts(dispatch)    
+        navigate("/")
+    }
+
 
     return (
-        <div className="container mt-5">
-            <h2 className="text-center mb-4">Actualizar contacto</h2>
-            <form onSubmit={handleUpdateContact}>
+        
+        <div className="input">
+            <div className="text-center mt-5">
                 <div className="input-group mb-3">
-                    <span className="input-group-text">Name</span>
+                    <span className="input-group-text" id="inputGroup-sizing-default">Nombre</span>
                     <input
-                        type="text"
-                        className="form-control"
-                        value={currentContact.name}
-                        onChange={(e) =>
-                            setCurrentContact({ ...currentContact, name: e.target.value })
-                        }
-                        aria-label="Name"
-                        aria-describedby="name-input"
+                        onChange={(e) => setCurrentContact({...currentContact, name: e.target.value})} 
+                        placeholder={currentContact?.name}
+                        type="text" 
+                        className="form-control" 
+                        aria-label="Sizing example input" 
+                        aria-describedby="inputGroup-sizing-default"
                     />
                 </div>
                 <div className="input-group mb-3">
-                    <span className="input-group-text">Phone</span>
+                    <span className="input-group-text" id="inputGroup-sizing-default">Telefono</span>
                     <input
-                        type="text"
-                        className="form-control"
-                        value={currentContact.phone}
-                        onChange={(e) =>
-                            setCurrentContact({ ...currentContact, phone: e.target.value })
-                        }
-                        aria-label="Phone"
-                        aria-describedby="phone-input"
+                        onChange={(e) => setCurrentContact({...currentContact, phone: e.target.value})} 
+                        placeholder={currentContact?.phone}
+                        type="text" 
+                        className="form-control" 
+                        aria-label="Sizing example input" 
+                        aria-describedby="inputGroup-sizing-default"
                     />
                 </div>
                 <div className="input-group mb-3">
-                    <span className="input-group-text">Email</span>
+                    <span className="input-group-text" id="inputGroup-sizing-default">email</span>
                     <input
-                        type="email"
-                        className="form-control"
-                        value={currentContact.email}
-                        onChange={(e) =>
-                            setCurrentContact({ ...currentContact, email: e.target.value })
-                        }
-                        aria-label="Email"
-                        aria-describedby="email-input"
+                        onChange={(e) => setCurrentContact({...currentContact, email: e.target.value})} 
+                        placeholder={currentContact?.email}
+                        type="text" 
+                        className="form-control" 
+                        aria-label="Sizing example input" 
+                        ria-describedby="inputGroup-sizing-default"
                     />
                 </div>
-                <div className="input-group mb-4">
-                    <span className="input-group-text">Address</span>
+                <div className="input-group mb-3">
+                    <span className="input-group-text" id="inputGroup-sizing-default">Direccion</span>
                     <input
-                        type="text"
-                        className="form-control"
-                        value={currentContact.address}
-                        onChange={(e) =>
-                            setCurrentContact({ ...currentContact, address: e.target.value })
-                        }
-                        aria-label="Address"
-                        aria-describedby="address-input"
+                        onChange={(e) => setCurrentContact({...currentContact, address: e.target.value})}
+                        placeholder={currentContact?.address}
+                        type="text" 
+                        className="form-control" 
+                        aria-label="Sizing example input" 
+                        aria-describedby="inputGroup-sizing-default"
                     />
                 </div>
-                <div className="text-center">
-                    <button type="submit" className="btn btn-success">
-                        Actualizar Contacto
-                    </button>
-                </div>
-            </form>
+                <button 
+                    onClick={(e) => handleUpdateContact(e)}
+                    type="submit"
+                    className="btn btn-success">
+                        Actualizar contacto
+                </button>
+            </div>
         </div>
     );
-};
-
+}; 

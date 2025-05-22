@@ -17,7 +17,7 @@ export const CreateContact = () => {
         <div className="input">
             <div className="text-center mt-5">
                 <div className="input-group mb-3">
-                    <span className="input-group-text" id="inputGroup-sizing-default">Name</span>
+                    <span className="input-group-text" id="inputGroup-sizing-default">Nombre</span>
                     <input
                         onChange={(e) => setNewContact({...newContact, name: e.target.value})} 
                         type="text" 
@@ -27,7 +27,7 @@ export const CreateContact = () => {
                     />
                 </div>
                 <div className="input-group mb-3">
-                    <span className="input-group-text" id="inputGroup-sizing-default">Phone</span>
+                    <span className="input-group-text" id="inputGroup-sizing-default">Telefono</span>
                     <input
                         onChange={(e) => setNewContact({...newContact, phone: e.target.value})} 
                         type="text" 
@@ -47,7 +47,7 @@ export const CreateContact = () => {
                     />
                 </div>
                 <div className="input-group mb-3">
-                    <span className="input-group-text" id="inputGroup-sizing-default">Address</span>
+                    <span className="input-group-text" id="inputGroup-sizing-default">Direccion</span>
                     <input
                         onChange={(e) => setNewContact({...newContact, address: e.target.value})} 
                         type="text" 
@@ -60,7 +60,7 @@ export const CreateContact = () => {
                     onClick={(e) => handleCreateNewContact(e)}
                     type="submit"
                     className="btn btn-success">
-                        Post
+                        Crear
                 </button>
             </div>
         </div>
