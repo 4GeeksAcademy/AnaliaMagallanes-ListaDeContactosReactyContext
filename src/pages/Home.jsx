@@ -1,26 +1,40 @@
-import React from "react";
-import { useGlobalContext } from "../hooks/useGlobalReducer";
+import React, {useState, useEffect} from "react";
+import useGlobalReducer from "../hooks/useGlobalReducer.jsx";
 import { Link } from "react-router-dom";
+import { ContactCard } from "../components/ContactCard.jsx";
 
-const Home = () => {
-  const { contacts, deleteContact } = useGlobalContext();
+export const Home = () => {
 
-  return (
-    <div className="container">
-      <h1>Contact List</h1>
-      <Link to="/add">Add Contact</Link>
-      {contacts.map((contact) => (
-        <div key={contact.id} className="card my-2 p-3">
-          <h5>{contact.fullName}</h5>
-          <p>📧 {contact.email}</p>
-          <p>📞 {contact.phone}</p>
-          <p>📍 {contact.address}</p>
-          <Link to={`/edit/${contact.id}`}>✏️ Edit</Link>
-          <button onClick={() => deleteContact(contact.id)}>🗑 Delete</button>
-        </div>
-      ))}
-    </div>
-  );
-};
+  const {store, dispatch, fetchAgenda} =useGlobalReducer();
+  const [contacts, setContacts] = useState([]);
 
-export default Home;
+  useEffect (() => {
+	fetchAgenda();
+  }, [])
+
+  useEffect (() => {
+	setContacts(store.contacts);
+  }, [store.contacts])
+
+  console.log(contacts);
+  
+
+	return (
+		<div className="text-center mt-5">
+			{
+				contacts?.length > 0 
+				
+				? contacts.map((contact, index) => {
+					return (
+						<ContactCard key={index} contact={contact} />
+					);
+				})				
+				: <h1> You need contacts, babe</h1>
+			}
+			<div className="ml-auto mt-5">
+				<Link className="btn btn-success mx-2" to={"/Create"}>Create Contact</Link>			
+			</div>
+		</div>
+		
+	);
+}; 

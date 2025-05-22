@@ -2,8 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import useGlobalReducer from "../hooks/useGlobalReducer.jsx";
 
-
-
 export const UpdateContact = () => {
     const { id } = useParams();
     const navigate = useNavigate();
@@ -11,13 +9,13 @@ export const UpdateContact = () => {
         name: "",
         phone: "",
         email: "",
-        address: ""
+        address: "",
     });
 
-    const { store, updateContact, getContacts } = useGlobalReducer();
+    const { store, dispatch, updateContact, getContacts } = useGlobalReducer();
 
     useEffect(() => {
-        getContacts(); // Carga los contactos al montar
+        getContacts(); // carga los contactos
     }, []);
 
     useEffect(() => {
@@ -30,7 +28,7 @@ export const UpdateContact = () => {
     const handleUpdateContact = (e) => {
         e.preventDefault();
         updateContact(currentContact);
-        getContacts();
+        getContacts(); // vuelve a cargar contactos actualizados
         navigate("/");
     };
 
@@ -48,7 +46,7 @@ export const UpdateContact = () => {
                             setCurrentContact({ ...currentContact, name: e.target.value })
                         }
                         aria-label="Name"
-                        aria-describedby="inputGroup-sizing-default"
+                        aria-describedby="name-input"
                     />
                 </div>
                 <div className="input-group mb-3">
@@ -61,7 +59,7 @@ export const UpdateContact = () => {
                             setCurrentContact({ ...currentContact, phone: e.target.value })
                         }
                         aria-label="Phone"
-                        aria-describedby="inputGroup-sizing-default"
+                        aria-describedby="phone-input"
                     />
                 </div>
                 <div className="input-group mb-3">
@@ -74,10 +72,10 @@ export const UpdateContact = () => {
                             setCurrentContact({ ...currentContact, email: e.target.value })
                         }
                         aria-label="Email"
-                        aria-describedby="inputGroup-sizing-default"
+                        aria-describedby="email-input"
                     />
                 </div>
-                <div className="input-group mb-3">
+                <div className="input-group mb-4">
                     <span className="input-group-text">Address</span>
                     <input
                         type="text"
@@ -87,7 +85,7 @@ export const UpdateContact = () => {
                             setCurrentContact({ ...currentContact, address: e.target.value })
                         }
                         aria-label="Address"
-                        aria-describedby="inputGroup-sizing-default"
+                        aria-describedby="address-input"
                     />
                 </div>
                 <div className="text-center">
@@ -99,3 +97,4 @@ export const UpdateContact = () => {
         </div>
     );
 };
+

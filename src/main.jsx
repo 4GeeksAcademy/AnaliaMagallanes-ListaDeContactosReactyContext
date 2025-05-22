@@ -1,23 +1,22 @@
-import React from "react";
-import ReactDOM from "react-dom/client";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { GlobalProvider } from "./hooks/useGlobalReducer";
-import Home from "./pages/Home";
-import AddContact from "./pages/AddContact";
-import EditContact from "./pages/EditContact";
-import './index.css';
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import './index.css'  // Global styles for your application
+import { RouterProvider } from "react-router-dom";  // Import RouterProvider to use the router
+import { router } from "./routes";  // Import the router configuration
+import { StoreProvider } from './hooks/useGlobalReducer';  // Import the StoreProvider for global state management
 
-ReactDOM.createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
-    <GlobalProvider>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/add" element={<AddContact />} />
-          <Route path="/edit/:id" element={<EditContact />} />
-        </Routes>
-      </BrowserRouter>
-    </GlobalProvider>
-  </React.StrictMode>
-);
+const Main = () => {
+    return (
+        <React.StrictMode>  
+            {/* Provide global state to all components */}
+            <StoreProvider> 
+                {/* Set up routing for the application */} 
+                <RouterProvider router={router}>
+                </RouterProvider>
+            </StoreProvider>
+        </React.StrictMode>
+    );
+}
 
+// Render the Main component into the root DOM element.
+ReactDOM.createRoot(document.getElementById('root')).render(<Main />)

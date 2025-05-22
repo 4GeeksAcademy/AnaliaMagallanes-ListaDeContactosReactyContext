@@ -1,67 +1,34 @@
-import React, { useReducer, useContext, createContext, useEffect } from "react";
+// Import necessary hooks and functions from React.
+import { useContext, useReducer, createContext } from "react";
+import storeReducer, { initialStore } from "../store"  // Import the reducer and the initial state.
+import { fetchAgenda, createAgenda, getContacts, createContact, updateContact, deleteContact } from "./actions";
 
-const GlobalContext = createContext();
+// Create a context to hold the global state of the application
+// We will call this global state the "store" to avoid confusion while using local states
+const StoreContext = createContext()
 
-const initialState = {
-  contacts: [],
-};
+// Define a provider component that encapsulates the store and warps it in a context provider to 
+// broadcast the information throught all the app pages and components.
+export function StoreProvider({ children }) {
+    // Initialize reducer with the initial state.
+    const [store, dispatch] = useReducer(storeReducer, initialStore())
+    // Provide the store and dispatch method to all child components.
 
-function reducer(state, action) {
-  switch (action.type) {
-    case "SET_CONTACTS":
-      return { ...state, contacts: action.payload };
-    case "ADD_CONTACT":
-      return { ...state, contacts: [...state.contacts, action.payload] };
-    case "DELETE_CONTACT":
-      return {
-        ...state,
-        contacts: state.contacts.filter(c => c.id !== action.payload),
-      };
-    case "UPDATE_CONTACT":
-      return {
-        ...state,
-        contacts: state.contacts.map(c =>
-          c.id === action.payload.id ? action.payload : c
-        ),
-      };
-    default:
-      return state;
-  }
+    const actions = {
+        fetchAgenda: (payload) => fetchAgenda(dispatch, payload),
+        createAgenda: (payload) => createAgenda(dispatch, payload),
+        getContacts: (payload) => getContacts(dispatch, payload),
+        createContact: (payload) => createContact(dispatch, payload),
+        updateContact: (payload) => updateContact(dispatch, payload),
+        deleteContact: (payload) => deleteContact(dispatch, payload),
+    }
+    return <StoreContext.Provider value={{ store, dispatch, ...actions }}>
+        {children}
+    </StoreContext.Provider>
 }
 
-export const GlobalProvider = ({ children }) => {
-  const [state, dispatch] = useReducer(reducer, initialState);
-
-  const addContact = (contact) => {
-    dispatch({ type: "ADD_CONTACT", payload: { ...contact, id: crypto.randomUUID() } });
-  };
-
-  const deleteContact = (id) => {
-    dispatch({ type: "DELETE_CONTACT", payload: id });
-  };
-
-  const updateContact = (contact) => {
-    dispatch({ type: "UPDATE_CONTACT", payload: contact });
-  };
-
-  useEffect(() => {
-    // Simulación de carga inicial
-    dispatch({
-      type: "SET_CONTACTS",
-      payload: [],
-    });
-  }, []);
-
-  return (
-    <GlobalContext.Provider value={{
-      contacts: state.contacts,
-      addContact,
-      deleteContact,
-      updateContact
-    }}>
-      {children}
-    </GlobalContext.Provider>
-  );
-};
-
-export const useGlobalContext = () => useContext(GlobalContext);
+// Custom hook to access the global state and dispatch function.
+export default function useGlobalReducer() {
+    const { dispatch, store, fetchAgenda, createAgenda, getContacts, createContact, updateContact, deleteContact } = useContext(StoreContext)
+    return { dispatch, store, fetchAgenda, createAgenda, getContacts, createContact, updateContact, deleteContact};
+}
